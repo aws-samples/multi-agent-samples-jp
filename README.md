@@ -11,6 +11,8 @@ Sample implementation of multi-agent systems using AWS Bedrock. This project aim
 
 This project is a sample implementation of multi-agent systems using AWS Bedrock, consisting of the following key components:
 
+![Concept](./docs/assets/images/concept.png)
+
 1. **Multi-Agent Collaboration**
    - **Business Development Multi-Agents (Collaborators)** - Multiple agents specialized in specific domains
    - **Business Development Multi-Agents (Supervisor)** - Agent that supervises and coordinates collaborator agents
@@ -18,6 +20,13 @@ This project is a sample implementation of multi-agent systems using AWS Bedrock
    - **Business Development Workflow** - Workflow that executes each agent in a predefined order
 3. **Event-Driven Agents**
    - **CloudFormation Analysis Event-Driven Agent** - Automatically detects and analyzes infrastructure changes
+
+## Architecture Features
+
+- **IaC**: All resources coded using AWS CDK
+- **Serverless Architecture**: Leveraging Lambda, Step Functions, DynamoDB, S3, and other managed services
+- **Tool implementation for various usage scenarios**: AWS Lambda used as a tool has interfaces implemented that can be called from Agents for Amazon Bedrock and AWS Step Functions.
+- **Implementation of specific multi-agent use cases**: Provides sample code for tool usage in event-driven scenarios, Multi Agent Collaboration, and agentific workflows.
 
 ## System Architecture
 
@@ -164,14 +173,6 @@ graph TD
     class SQS,SNS,EB,CF messaging;
     class SFN,CFNFA,SV workflow;
 ```
-
-## Architecture Features
-
-- **IaC**: All resources coded using AWS CDK
-- **Serverless Architecture**: Leveraging Lambda, Step Functions, DynamoDB, S3, and other managed services
-- **Event-Driven Design**: Loosely coupled components using EventBridge, SQS, SNS
-- **Stateful Workflows**: Complex workflow management with Step Functions
-- **Scalable Storage**: Efficient data management with S3 and DynamoDB
 
 ## Key Component Details
 
