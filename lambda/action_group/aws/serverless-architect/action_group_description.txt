@@ -1,0 +1,77 @@
+このアクショングループは、サーバーレスアーキテクチャの設計と実装を行うServerlessArchitectエージェントの機能を提供します。
+
+以下の関数を含みます：
+
+1. design_serverless_architecture
+   説明: 要件に基づいてサーバーレスアーキテクチャを設計します。Lambda、API Gateway、DynamoDB、S3などのサーバーレスサービスを使用した包括的なアーキテクチャを提供します。
+   パラメータ:
+   - requirement: アプリケーション要件の詳細説明。
+     タイプ: string
+     必須: はい
+   - application_type: アプリケーションのタイプ（例: "web", "api", "data-processing", "event-driven"）
+     タイプ: string
+     必須: いいえ
+   - project_id: プロジェクトを識別するための一意のID。指定しない場合は自動生成されます。
+     タイプ: string
+     必須: いいえ
+
+2. design_event_driven_architecture
+   説明: イベント駆動型のサーバーレスアーキテクチャを設計します。EventBridge、SNS、SQS、Lambdaなどを使用したイベント駆動型システムを提供します。
+   パラメータ:
+   - requirement: アプリケーション要件の詳細説明。
+     タイプ: string
+     必須: はい
+   - event_sources: イベントソースの説明（例: "s3,dynamodb,custom"）。
+     タイプ: string
+     必須: いいえ
+   - project_id: プロジェクトを識別するための一意のID。指定しない場合は自動生成されます。
+     タイプ: string
+     必須: いいえ
+
+3. design_api_gateway
+   説明: API Gatewayを使用したRESTful APIまたはGraphQL APIを設計します。エンドポイント、メソッド、認証、スロットリングなどを含むAPI設計を提供します。
+   パラメータ:
+   - requirement: API要件の詳細説明。
+     タイプ: string
+     必須: はい
+   - api_type: APIのタイプ（"rest" または "graphql"）。
+     タイプ: string
+     必須: いいえ
+   - authentication_type: 認証タイプ（例: "cognito", "lambda-authorizer", "iam", "api-key"）。
+     タイプ: string
+     必須: いいえ
+   - project_id: プロジェクトを識別するための一意のID。指定しない場合は自動生成されます。
+     タイプ: string
+     必須: いいえ
+
+4. optimize_lambda_functions
+   説明: Lambda関数のパフォーマンス、コスト、セキュリティを最適化するための推奨事項を提供します。
+   パラメータ:
+   - function_code: 最適化するLambda関数のコード。
+     タイプ: string
+     必須: はい
+   - runtime: Lambda関数のランタイム（例: "nodejs18.x", "python3.9", "java11"）。
+     タイプ: string
+     必須: はい
+   - optimization_focus: 最適化の焦点（例: "performance", "cost", "security", "all"）。
+     タイプ: string
+     必須: いいえ
+   - project_id: プロジェクトを識別するための一意のID。指定しない場合は自動生成されます。
+     タイプ: string
+     必須: いいえ
+
+5. design_step_functions_workflow
+   説明: AWS Step Functionsを使用したサーバーレスワークフローを設計します。状態マシン定義、入出力処理、エラーハンドリングを含むワークフロー設計を提供します。
+   パラメータ:
+   - requirement: ワークフロー要件の詳細説明。
+     タイプ: string
+     必須: はい
+   - workflow_type: ワークフローのタイプ（"standard" または "express"）。
+     タイプ: string
+     必須: いいえ
+   - integration_services: 統合するAWSサービス（例: "lambda,dynamodb,sqs,sns"）。
+     タイプ: string
+     必須: いいえ
+   - project_id: プロジェクトを識別するための一意のID。指定しない場合は自動生成されます。
+     タイプ: string
+     必須: いいえ

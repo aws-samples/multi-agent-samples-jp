@@ -1,0 +1,99 @@
+このアクショングループは、AWSベストプラクティスに基づくクラウドアーキテクチャの設計と評価を行うCloudArchitectエージェントの機能を提供します。
+
+以下の関数を含みます：
+
+1. design_cloud_architecture
+   説明: 要件に基づいてAWSクラウドアーキテクチャを設計します。コンポーネント、サービス選択、ネットワーク構成、セキュリティ設計などを含む包括的なクラウドアーキテクチャを提供します。
+   パラメータ:
+   - requirement: ユーザーから提供された要件の詳細説明。
+     タイプ: string
+     必須: はい
+   - architecture_type: アーキテクチャのタイプ（例: "serverless", "containerized", "microservices", "hybrid"）
+     タイプ: string
+     必須: いいえ
+   - project_id: プロジェクトを識別するための一意のID。指定しない場合は自動生成されます。
+     タイプ: string
+     必須: いいえ
+   - user_id: リクエストを行ったユーザーのID。
+     タイプ: string
+     必須: いいえ
+
+2. evaluate_architecture
+   説明: AWS Well-Architected Frameworkに基づいて既存のクラウドアーキテクチャを評価し、改善点を提案します。
+   パラメータ:
+   - architecture_id: 評価するアーキテクチャのID。
+     タイプ: string
+     必須: はい
+   - pillars: 評価する特定のWell-Architected Frameworkの柱（例: "operational-excellence,security,reliability"）。指定しない場合はすべての柱で評価します。
+     タイプ: string
+     必須: いいえ
+   - project_id: プロジェクトを識別するための一意のID。
+     タイプ: string
+     必須: はい
+
+3. create_infrastructure_diagram
+   説明: クラウドアーキテクチャに基づいてAWS Architecture Diagram形式のインフラストラクチャ図を作成します。
+   パラメータ:
+   - architecture_id: 以前に作成されたアーキテクチャのID。
+     タイプ: string
+     必須: はい
+   - diagram_type: 図の種類（例: "high-level", "detailed", "network", "security"）
+     タイプ: string
+     必須: いいえ
+   - project_id: プロジェクトを識別するための一意のID。
+     タイプ: string
+     必須: はい
+
+4. optimize_cost
+   説明: 既存のクラウドアーキテクチャのコスト最適化分析を行い、コスト削減の機会を特定します。
+   パラメータ:
+   - architecture_id: 最適化するアーキテクチャのID。
+     タイプ: string
+     必須: はい
+   - monthly_budget: 月間予算の上限（USD）。
+     タイプ: string
+     必須: いいえ
+   - optimization_focus: 最適化の焦点（例: "compute", "storage", "database", "network", "all"）
+     タイプ: string
+     必須: いいえ
+   - project_id: プロジェクトを識別するための一意のID。
+     タイプ: string
+     必須: はい
+
+5. design_disaster_recovery
+   説明: クラウドアーキテクチャに基づいて災害復旧（DR）戦略を設計します。RPO/RTOの目標、バックアップ戦略、フェイルオーバーメカニズムを含みます。
+   パラメータ:
+   - architecture_id: 災害復旧戦略を設計するアーキテクチャのID。
+     タイプ: string
+     必須: はい
+   - rpo_hours: 目標復旧時点（RPO）の時間数。
+     タイプ: string
+     必須: いいえ
+   - rto_hours: 目標復旧時間（RTO）の時間数。
+     タイプ: string
+     必須: いいえ
+   - project_id: プロジェクトを識別するための一意のID。
+     タイプ: string
+     必須: はい
+
+6. analyze_cfn_failure
+   説明: CloudFormationスタックの失敗を分析し、根本原因と修正案を提供します。
+   パラメータ:
+   - stackId: 失敗したCloudFormationスタックのID。
+     タイプ: string
+     必須: はい
+   - stackName: 失敗したCloudFormationスタックの名前。
+     タイプ: string
+     必須: はい
+   - logicalResourceId: 失敗したリソースの論理ID。
+     タイプ: string
+     必須: いいえ
+   - resourceType: 失敗したリソースのタイプ。
+     タイプ: string
+     必須: いいえ
+   - statusReason: 失敗の理由。
+     タイプ: string
+     必須: いいえ
+   - project_id: プロジェクトを識別するための一意のID。
+     タイプ: string
+     必須: いいえ
