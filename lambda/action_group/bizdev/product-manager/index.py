@@ -17,7 +17,7 @@ logger.setLevel(logging.INFO)
 
 # 環境変数
 ENV_NAME = os.environ.get('ENV_NAME', 'dev')
-PROJECT_NAME = os.environ.get('PROJECT_NAME', 'smajp')
+PROJECT_NAME = os.environ.get('PROJECT_NAME', 'masjp')
 AGENT_STATE_TABLE = os.environ.get('AGENT_STATE_TABLE')
 MESSAGE_HISTORY_TABLE = os.environ.get('MESSAGE_HISTORY_TABLE')
 ARTIFACTS_BUCKET = os.environ.get('ARTIFACTS_BUCKET')

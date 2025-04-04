@@ -13,7 +13,7 @@ bedrock_runtime = boto3.client('bedrock-runtime')
 
 # 環境変数
 ENV_NAME = os.environ.get('ENV_NAME', 'dev')
-PROJECT_NAME = os.environ.get('PROJECT_NAME', 'smajp')
+PROJECT_NAME = os.environ.get('PROJECT_NAME', 'masjp')
 
 # デフォルトのモデルID
 DEFAULT_MODEL_ID = 'anthropic.claude-3-5-sonnet-20241022-v2:0'

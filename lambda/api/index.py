@@ -17,7 +17,7 @@ stepfunctions = boto3.client('stepfunctions')
 
 # 環境変数
 ENV_NAME = os.environ.get('ENV_NAME', 'dev')
-PROJECT_NAME = os.environ.get('PROJECT_NAME', 'smajp')
+PROJECT_NAME = os.environ.get('PROJECT_NAME', 'masjp')
 COMMUNICATION_QUEUE_URL = os.environ.get('COMMUNICATION_QUEUE_URL')
 EVENT_BUS_NAME = os.environ.get('EVENT_BUS_NAME')
 STATE_MACHINE_ARN = os.environ.get('STATE_MACHINE_ARN')

@@ -23,7 +23,7 @@ const env = {
 };
 
 // プロジェクト名のプレフィックス
-const projectName = 'smajp';
+const projectName = 'masjp';
 
 // 通知メールアドレス（環境変数から取得）
 const notificationEmail = process.env.NOTIFICATION_EMAIL;
