@@ -1,0 +1,22 @@
+name: Build
+on: 
+  push:
+    branches:
+    - main
+  workflow_dispatch:
+  pull_request:
+jobs:
+  Build-and-Test-CDK:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "22.x"
+      - run: |
+          npm ci
+          npm run build
+          # npm run test
+          npx cdk synth
+        working-directory: .
