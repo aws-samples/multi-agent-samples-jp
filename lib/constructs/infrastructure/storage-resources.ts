@@ -52,7 +52,7 @@ export class StorageResources extends Construct {
 
     // 成果物を保存するS3バケット
     this.artifactsBucket = new s3.Bucket(this, 'ArtifactsBucket', {
-      bucketName: `${bucketNamePrefix}${projectName}-${envName}-artifacts-${account}-${region}`.toLowerCase(),
+      // bucketName: `${bucketNamePrefix}${projectName}-${envName}-artifacts-${account}-${region}`.toLowerCase(),
       encryption: s3.BucketEncryption.S3_MANAGED,
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
       removalPolicy: envName === 'prod' ? cdk.RemovalPolicy.RETAIN : cdk.RemovalPolicy.DESTROY,
