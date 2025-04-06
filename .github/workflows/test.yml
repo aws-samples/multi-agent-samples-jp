@@ -1,0 +1,75 @@
+name: Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-typescript:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x]
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Build
+      run: npm run build
+    
+    - name: Run TypeScript tests
+      run: npm test
+      
+    - name: Run CDK snapshot tests
+      run: npm run test:snapshot
+      env:
+        AWS_REGION: us-west-2
+        ENV_NAME: test
+    
+    - name: CDK synth
+      run: npx cdk synth
+      env:
+        AWS_REGION: us-west-2
+        ENV_NAME: test
+
+  test-python:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        python-version: [3.13]
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+        
+    - name: Install uv
+      run: |
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+        echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+        
+    - name: Install dependencies with uv
+      run: |
+        uv pip install pytest pytest-mock boto3 moto
+        if [ -f requirements.txt ]; then uv pip install -r requirements.txt; fi
+        if [ -f lambda/layers/common/requirements.txt ]; then uv pip install -r lambda/layers/common/requirements.txt; fi
+    
+    - name: Run Python tests with uvx
+      run: |
+        uvx pytest tests/ -v
