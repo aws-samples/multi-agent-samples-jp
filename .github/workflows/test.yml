@@ -12,7 +12,7 @@ jobs:
     
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [20.x]
     
     steps:
     - uses: actions/checkout@v3
@@ -66,10 +66,13 @@ jobs:
         
     - name: Install dependencies with uv
       run: |
+        uv venv
         uv pip install pytest pytest-mock boto3 moto
         if [ -f requirements.txt ]; then uv pip install -r requirements.txt; fi
         if [ -f lambda/layers/common/requirements.txt ]; then uv pip install -r lambda/layers/common/requirements.txt; fi
     
     - name: Run Python tests with uvx
+      env:
+          PYTHONPATH: ${{ github.workspace }}
       run: |
         uvx pytest tests/ -v
