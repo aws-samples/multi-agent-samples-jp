@@ -72,7 +72,7 @@ jobs:
         if [ -f lambda/layers/common/requirements.txt ]; then uv pip install -r lambda/layers/common/requirements.txt; fi
     
     - name: Run Python tests with uvx
-      env:
-          PYTHONPATH: ${{ github.workspace }}
+      # env:
+      #     PYTHONPATH: ${{ github.workspace }}
       run: |
         uvx pytest tests/ -v
