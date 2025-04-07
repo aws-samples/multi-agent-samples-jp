@@ -1,80 +1,79 @@
 <div markdown="1" align="center">
   <h1>multi-agent-samples-jp</h1>
 
-English | [日本語](./README_ja.md)
+[English](./README_en.md) | 日本語
 
-Sample implementation of multi-agent systems using AWS Bedrock. This project aims to automate and improve software development processes using AI agents.
+AWS Bedrockを活用したマルチエージェントのサンプル実装です。このプロジェクトは、AIエージェントを活用したソフトウェア開発プロセスの自動化と効率化を目指しています。
 
 </div>
 
-## Project Overview
+## プロジェクト概要
 
-This project is a sample implementation of multi-agent systems using AWS Bedrock, consisting of the following key components:
+このプロジェクトは、AWS Bedrockを活用したマルチエージェントのサンプル実装で、主に以下の主要コンポーネントで構成されています：
 
 ![Concept](./docs/assets/images/concept.png)
 
-1. **Multi-Agent Collaboration**
-   - **Business Development Multi-Agents (Collaborators)** - Multiple agents specialized in specific domains
-   - **Business Development Multi-Agents (Supervisor)** - Agent that supervises and coordinates collaborator agents
-2. **Agentific Workflow**
-   - **Business Development Workflow** - Workflow that executes each agent in a predefined order
-3. **Event-Driven Agents**
-   - **CloudFormation Analysis Event-Driven Agent** - Automatically detects and analyzes infrastructure changes
+1. **マルチエージェントコラボレーション**
+    - **事業開発マルチエージェント（コラボレーター）** - 専門分野に特化した複数のエージェント
+    - **事業開発マルチエージェント（スーパーバイザー）** - コラボレーターエージェントを監督・調整するエージェント
+2. **エージェンティックワークフロー**
+    - **事業開発ワークフロー** - 事前に定義された順序に沿って、各エージェントを実行するワークフロー
+3. **イベント駆動エージェント**
+    - **CloudFormation分析イベント駆動エージェント** - インフラストラクチャの変更を自動検出・分析
 
-## Architecture Features
+## アーキテクチャの特徴
 
-- **IaC**: All resources coded using AWS CDK
-- **Serverless Architecture**: Leveraging Lambda, Step Functions, DynamoDB, S3, and other managed services
-- **Tool implementation for various usage scenarios**: AWS Lambda used as a tool has interfaces implemented that can be called from Agents for Amazon Bedrock and AWS Step Functions.
-- **Implementation of specific multi-agent use cases**: Provides sample code for tool usage in event-driven scenarios, Multi Agent Collaboration, and agentific workflows.
+- **IaC**: AWS CDKを使用して全リソースをコード化
+- **サーバーレスアーキテクチャ**: Lambda、Step Functions、DynamoDB、S3などのマネージドサービスを活用
+- **様々な利用シーンから利用可能なツール実装** ツールとして利用される AWS Lambda には、Agents for Amazon Bedrock, AWS Step Functions から呼び出すことができるインターフェースが実装されている。
+- **具体的なマルチエージェントのユースケース実装** イベント駆動のツール利用、マルチエージェント、エージェンティックワークフローからのツール利用のサンプルコードを提供
 
-## System Architecture
-
-### Business Development Multi-Agents
+## システムアーキテクチャ
+### **事業開発マルチエージェント**
 
 ```mermaid
 graph TD
     
-    S3[(S3 Bucket)]
+    S3[(S3 バケット)]
     DDB[(DynamoDB)]
-    SQS[SQS Queue]
+    SQS[SQS キュー]
 
-    subgraph "Business Development Agent"
-        User[User] --> |Business Idea| SV[Business Development Supervisor]
+    subgraph "事業開発エージェント"
+        User[ユーザー] --> |事業アイデア| SV[事業開発スーパーバイザー]
     end
 
-    subgraph "Collaborator Agents"
-        PDM[Product Manager]
-        ARCH[Architect]
-        ENG[Engineer]
+    subgraph "コラボレーターエージェント"
+        PDM[プロダクトマネージャー]
+        ARCH[アーキテクト]
+        ENG[エンジニア]
     end
     
-    SV --> |Task Assignment| PDM
-    SV --> |Task Assignment| ARCH
-    SV --> |Task Assignment| ENG
+    SV --> |タスク割り当て| PDM
+    SV --> |タスク割り当て| ARCH
+    SV --> |タスク割り当て| ENG
     
-    PDM --> |Deliverable Report| SV
-    ARCH --> |Deliverable Report| SV
-    ENG --> |Deliverable Report| SV
+    PDM --> |成果物報告| SV
+    ARCH --> |成果物報告| SV
+    ENG --> |成果物報告| SV
     
     
-    %% Agent and Storage Relationship
-    PDM --> |Store Artifacts| S3
-    ARCH --> |Store Artifacts| S3
-    ENG --> |Store Artifacts| S3
-    SV --> |Store Coordination Results| S3
+    %% エージェントとストレージの関係
+    PDM --> |成果物保存| S3
+    ARCH --> |成果物保存| S3
+    ENG --> |成果物保存| S3
+    SV --> |調整結果保存| S3
     
-    %% Agent and Database Relationship
-    PDM <--> |State Management| DDB
-    ARCH <--> |State Management| DDB
-    ENG <--> |State Management| DDB
-    SV <--> |State Management| DDB
+    %% エージェントとデータベースの関係
+    PDM <--> |状態管理| DDB
+    ARCH <--> |状態管理| DDB
+    ENG <--> |状態管理| DDB
+    SV <--> |状態管理| DDB
     
-    %% Inter-agent Communication
-    PDM <--> |Message Exchange| SQS
-    ARCH <--> |Message Exchange| SQS
-    ENG <--> |Message Exchange| SQS
-    SV <--> |Message Exchange| SQS
+    %% エージェント間通信
+    PDM <--> |メッセージ交換| SQS
+    ARCH <--> |メッセージ交換| SQS
+    ENG <--> |メッセージ交換| SQS
+    SV <--> |メッセージ交換| SQS
     
     classDef agents fill:#f9f,stroke:#333,stroke-width:2px;
     classDef storage fill:#bbf,stroke:#333,stroke-width:2px;
@@ -87,20 +86,19 @@ graph TD
     class SQS,SNS,EB,CF messaging;
     class SFN,CFNFA,SV workflow;
 ```
-
-### Business Development Workflow
+### **事業開発ワークフロー**
 
 ```mermaid
 graph TD
     
-    S3[(S3 Bucket)]
+    S3[(S3 バケット)]
     DDB[(DynamoDB)]
 
-    subgraph "Business Development Workflow"
-        User[User] --> |Business Idea| SFN[Business Development Workflow]
-        PDM[Product Manager]
-        ARCH[Architect]
-        ENG[Engineer]
+    subgraph "事業開発ワークフロー"
+        User[ユーザー] --> |事業アイデア| SFN[事業開発ワークフロー]
+        PDM[プロダクトマネージャー]
+        ARCH[アーキテクト]
+        ENG[エンジニア]
     end
 
     
@@ -110,15 +108,15 @@ graph TD
     SFN --> ENG
     
     
-    %% Agent and Storage Relationship
-    PDM --> |Store Artifacts| S3
-    ARCH --> |Store Artifacts| S3
-    ENG --> |Store Artifacts| S3
+    %% エージェントとストレージの関係
+    PDM --> |成果物保存| S3
+    ARCH --> |成果物保存| S3
+    ENG --> |成果物保存| S3
     
-    %% Agent and Database Relationship
-    PDM <--> |State Management| DDB
-    ARCH <--> |State Management| DDB
-    ENG <--> |State Management| DDB
+    %% エージェントとデータベースの関係
+    PDM <--> |状態管理| DDB
+    ARCH <--> |状態管理| DDB
+    ENG <--> |状態管理| DDB
     
     classDef agents fill:#f9f,stroke:#333,stroke-width:2px;
     classDef storage fill:#bbf,stroke:#333,stroke-width:2px;
@@ -131,37 +129,36 @@ graph TD
     class SQS,SNS,EB,CF messaging;
     class SFN,CFNFA,SV workflow;
 ```
-
-### CloudFormation Analysis Event-Driven Agent
+### **CloudFormation分析イベント駆動エージェント**
 
 ```mermaid
 graph TD
     
     EB[EventBridge]
-    S3[(S3 Bucket)]
+    S3[(S3 バケット)]
     DDB[(DynamoDB)]
-    User[User]
+    User[ユーザー]
     
     
-    SNS[SNS Topic]
+    SNS[SNS トピック]
     
     
-    subgraph "Event-Driven System"
-        CF[CloudFormation] --> |Change Event| EB
-        EB --> CFNFA[CFn Analysis Workflow]
+    subgraph "イベント駆動システム"
+        CF[CloudFormation] --> |変更イベント| EB
+        EB --> CFNFA[CFn分析ワークフロー]
         
-        CA[Cloud Architect]
+        CA[クラウドアーキテクト]
         
         CFNFA --> CA
-        CFNFA --> |Analysis Results| SNS
+        CFNFA --> |分析結果| SNS
     end
-    SNS --> |Notification| User
+    SNS --> |通知| User
     
-    %% Agent and Storage Relationship
-    CA --> |Store Analysis Results| S3
+    %% エージェントとストレージの関係
+    CA --> |分析結果保存| S3
     
-    %% Agent and Database Relationship
-    CA <--> |State Management| DDB
+    %% エージェントとデータベースの関係
+    CA <--> |状態管理| DDB
     
     classDef agents fill:#f9f,stroke:#333,stroke-width:2px;
     classDef storage fill:#bbf,stroke:#333,stroke-width:2px;
@@ -174,27 +171,28 @@ graph TD
     class SFN,CFNFA,SV workflow;
 ```
 
-## Key Component Details
 
-### 1. Business Development Multi-Agents (Collaborators)
+## 主要コンポーネント詳細
 
-Each agent specializes in a specific domain and collaborates with others.
+### 1. 事業開発マルチエージェント（コラボレーター）
 
-#### Product Manager
+各エージェントは特定の専門分野に特化し、連携して作業します。
+
+#### プロダクトマネージャー
 
 ```mermaid
 graph LR
-    PM[Product Manager] --> |1| RA[Requirements Analysis]
-    PM --> |2| US[User Story Creation]
-    PM --> |3| CA[Competitive Analysis]
-    PM --> |4| PRD[Product Requirements Doc]
+    PM[プロダクトマネージャー] --> |1| RA[要件分析]
+    PM --> |2| US[ユーザーストーリー作成]
+    PM --> |3| CA[競合分析]
+    PM --> |4| PRD[製品要件書作成]
     
     RA --> S3[(S3)]
     US --> S3
     CA --> S3
     PRD --> S3
     
-    subgraph "Product Manager Functions"
+    subgraph "プロダクトマネージャーの機能"
     RA
     US
     CA
@@ -202,26 +200,26 @@ graph LR
     end
 ```
 
-- **Requirements Analysis**: Detailed analysis of user requirements, identifying key features and target users
-- **User Story Creation**: Creating stories in the format "As a [user], I want to [action], so that [benefit]"
-- **Competitive Analysis**: Analyzing market competitors and identifying differentiation points
-- **PRD Creation**: Creating comprehensive product requirement documents to guide development
+- **要件分析**: ユーザーの要件を詳細に分析し、主要機能やターゲットユーザーを特定
+- **ユーザーストーリー作成**: 「〜として、〜したい、なぜなら〜」形式のストーリーを作成
+- **競合分析**: 市場の競合製品を分析し、差別化ポイントを特定
+- **PRD作成**: 包括的な製品要件書を作成し、開発の指針を提供
 
-#### Architect
+#### アーキテクト
 
 ```mermaid
 graph LR
-    ARCH[Architect] --> |1| AD[Architecture Design]
-    ARCH --> |2| CD[Class Diagram Creation]
-    ARCH --> |3| SD[Sequence Diagram Creation]
-    ARCH --> |4| API[API Design]
+    ARCH[アーキテクト] --> |1| AD[アーキテクチャ設計]
+    ARCH --> |2| CD[クラス図作成]
+    ARCH --> |3| SD[シーケンス図作成]
+    ARCH --> |4| API[API設計]
     
     AD --> S3[(S3)]
     CD --> S3
     SD --> S3
     API --> S3
     
-    subgraph "Architect Functions"
+    subgraph "アーキテクトの機能"
     AD
     CD
     SD
@@ -229,90 +227,90 @@ graph LR
     end
 ```
 
-- **Architecture Design**: Designing the overall system structure and technology choices
-- **Class Diagram Creation**: Creating object-oriented design class structures in Mermaid format
-- **Sequence Diagram Creation**: Creating sequence diagrams for important use cases in Mermaid format
-- **API Design**: Creating detailed designs for RESTful APIs or GraphQL APIs
+- **アーキテクチャ設計**: システム全体の構造と技術選択を設計
+- **クラス図作成**: オブジェクト指向設計のクラス構造をMermaid形式で作成
+- **シーケンス図作成**: 重要なユースケースのシーケンス図をMermaid形式で作成
+- **API設計**: RESTful APIやGraphQL APIの詳細設計を作成
 
-#### Engineer
+#### エンジニア
 
 ```mermaid
 graph LR
-    ENG[Engineer] --> |1| IMP[Code Implementation]
-    ENG --> |2| REV[Code Review]
-    ENG --> |3| FIX[Bug Fixing]
+    ENG[エンジニア] --> |1| IMP[コード実装]
+    ENG --> |2| REV[コードレビュー]
+    ENG --> |3| FIX[バグ修正]
     
     IMP --> S3[(S3)]
     REV --> S3
     FIX --> S3
     
-    subgraph "Engineer Functions"
+    subgraph "エンジニアの機能"
     IMP
     REV
     FIX
     end
 ```
 
-- **Code Implementation**: Implementing actual code based on architecture and requirements
-- **Code Review**: Evaluating implemented code for quality, performance, and security
-- **Bug Fixing**: Fixing issues identified in reviews to improve code quality
+- **コード実装**: アーキテクチャと要件に基づいて実際のコードを実装
+- **コードレビュー**: 実装されたコードの品質、パフォーマンス、セキュリティを評価
+- **バグ修正**: レビューで特定された問題を修正し、コード品質を向上
 
-### 2. Business Development Multi-Agents (Supervisor)
+### 2. 事業開発マルチエージェント（スーパーバイザー）
 
 ```mermaid
 graph TD
-    SV[Supervisor] --> |Supervise & Coordinate| PDM[Product Manager]
-    SV --> |Supervise & Coordinate| ARCH[Architect]
-    SV --> |Supervise & Coordinate| ENG[Engineer]
+    SV[スーパーバイザー] --> |監督・調整| PDM[プロダクトマネージャー]
+    SV --> |監督・調整| ARCH[アーキテクト]
+    SV --> |監督・調整| ENG[エンジニア]
 ```
 
-- **Agent Coordination**: Appropriately assigning and coordinating roles and tasks for each agent
-- **Communication Management**: Facilitating information transfer between agents
-- **Progress Monitoring**: Monitoring overall project progress and intervening when necessary
-- **Quality Assessment**: Evaluating the quality of each agent's output and promoting improvements
-- **User Bridging**: Mediating communication between users and the agent team
+- **エージェント調整**: 各エージェントの役割と作業を適切に割り当て・調整
+- **コミュニケーション管理**: エージェント間の情報伝達を円滑化
+- **進捗監視**: プロジェクト全体の進捗を監視し、必要に応じて介入
+- **品質評価**: 各エージェントの出力の品質を評価し、改善を促進
+- **ユーザー橋渡し**: ユーザーとエージェントチーム間のコミュニケーションを仲介
 
-### 3. CloudFormation Analysis Event-Driven Agent
+### 3. CloudFormation分析イベント駆動エージェント
 
 ```mermaid
 sequenceDiagram
     participant CF as CloudFormation
     participant EB as EventBridge
     participant SM as Step Functions
-    participant LA as Lambda (Analysis)
+    participant LA as Lambda (分析)
     participant CA as Cloud Architect
-    participant S3 as S3 Bucket
-    participant SNS as SNS Topic
-    participant User as User
+    participant S3 as S3 バケット
+    participant SNS as SNS トピック
+    participant User as ユーザー
     
-    CF->>EB: Emit Stack Change Event
-    EB->>SM: Detect Event & Start Workflow
-    SM->>LA: Parse CloudFormation Event
-    LA->>CA: Provide Change Information
-    CA->>S3: Store Analysis Results
-    SM->>SNS: Send Notification Message
-    SNS->>User: Email Notification
+    CF->>EB: スタック変更イベント発行
+    EB->>SM: イベント検出・ワークフロー開始
+    SM->>LA: CloudFormationイベント解析
+    LA->>CA: 変更情報を提供
+    CA->>S3: 分析結果を保存
+    SM->>SNS: 通知メッセージ送信
+    SNS->>User: メール通知
 ```
 
-- **Automatic Detection**: Automatically detecting CloudFormation stack changes
-- **Detailed Analysis**: Detailed analysis of the cause and impact scope of changes
-- **Correction Proposals**: Proposing specific corrections for problem resolution
-- **Notification**: Notifying stakeholders of analysis results through SNS topics
+- **自動検出**: CloudFormationスタックの変更を自動的に検出
+- **詳細分析**: 変更の原因と影響範囲を詳細に分析
+- **修正提案**: 問題解決のための具体的な修正案を提案
+- **通知**: 分析結果をSNSトピックを通じて関係者に通知
 
-## Technical Stack Details
+## 技術スタック詳細
 
-- **AWS CDK**: Infrastructure as code using TypeScript
-- **AWS Bedrock**: Advanced natural language processing with Claude 3.5 Sonnet model and Multi Agent Collaboration
-- **AWS Lambda**: Serverless implementation in Python
-- **AWS Step Functions**: Definition and execution of complex workflows
-- **DynamoDB**: Storage of agent states and conversation history
-- **S3**: Storage of analysis results, design documents, implementation code
-- **SQS/SNS/EventBridge**: Event-driven architecture
-- **CloudWatch**: Log management, metrics monitoring, alert configuration
+- **AWS CDK**: TypeScriptを使用したインフラストラクチャのコード化
+- **AWS Bedrock**: Claude 3.5 Sonnetモデルによる高度な自然言語処理と、Multi Agent Collaboration による複数エージェントのオーケストレーション
+- **AWS Lambda**: Python によるサーバーレスな処理の実装
+- **AWS Step Functions**: 複雑なワークフローの定義と実行
+- **DynamoDB**: エージェント状態と会話履歴の保存
+- **S3**: 分析結果、設計文書、実装コードなどの成果物保存
+- **SQS/SNS/EventBridge**: イベント駆動型アーキテクチャの実現
+- **CloudWatch**: ログ管理、メトリクス監視、アラート設定
 
-## Workflow Details
+## ワークフロー詳細
 
-### Business Development Workflow
+### 事業開発ワークフロー
 
 ```mermaid
 stateDiagram-v2
@@ -326,28 +324,28 @@ stateDiagram-v2
     ImplementCode --> ReviewCode
     ReviewCode --> [*]
     
-    ProcessRequirement --> HandleError: Error Occurs
-    CreateUserStories --> HandleError: Error Occurs
-    CreateCompetitiveAnalysis --> HandleError: Error Occurs
-    CreatePRD --> HandleError: Error Occurs
-    CreateArchitecture --> HandleError: Error Occurs
-    ImplementCode --> HandleError: Error Occurs
-    ReviewCode --> HandleError: Error Occurs
+    ProcessRequirement --> HandleError: エラー発生
+    CreateUserStories --> HandleError: エラー発生
+    CreateCompetitiveAnalysis --> HandleError: エラー発生
+    CreatePRD --> HandleError: エラー発生
+    CreateArchitecture --> HandleError: エラー発生
+    ImplementCode --> HandleError: エラー発生
+    ReviewCode --> HandleError: エラー発生
     
     HandleError --> Fail
     Fail --> [*]
 ```
 
-1. **Initialization**: Generating project ID and setting necessary fields
-2. **Requirement Processing**: Analysis of requirements by the Product Manager
-3. **User Story Creation**: Defining features from a user perspective
-4. **Competitive Analysis**: Analyzing the market and competing products
-5. **PRD Creation**: Creating a comprehensive product requirements document
-6. **Architecture Creation**: System design and technology selection
-7. **Code Implementation**: Actual coding work
-8. **Code Review**: Quality evaluation and improvement suggestions for implementation
+1. **初期化**: プロジェクトIDの生成と必要なフィールドの設定
+2. **要件処理**: プロダクトマネージャーによる要件の分析
+3. **ユーザーストーリー作成**: ユーザー視点での機能定義
+4. **競合分析**: 市場と競合製品の分析
+5. **PRD作成**: 包括的な製品要件書の作成
+6. **アーキテクチャ作成**: システム設計と技術選択
+7. **コード実装**: 実際のコーディング作業
+8. **コードレビュー**: 実装の品質評価と改善提案
 
-### CloudFormation Analysis Workflow
+### CloudFormation分析ワークフロー
 
 ```mermaid
 stateDiagram-v2
@@ -357,99 +355,107 @@ stateDiagram-v2
     MapToNotification --> SendNotification
     SendNotification --> [*]
     
-    ParseCfnEvent --> HandleError: Error Occurs
-    InvokeCloudArchitect --> HandleError: Error Occurs
-    MapToNotification --> HandleError: Error Occurs
-    SendNotification --> HandleError: Error Occurs
+    ParseCfnEvent --> HandleError: エラー発生
+    InvokeCloudArchitect --> HandleError: エラー発生
+    MapToNotification --> HandleError: エラー発生
+    SendNotification --> HandleError: エラー発生
     
     HandleError --> [*]
 ```
 
-1. **Event Parsing**: Parsing details of CloudFormation events
-2. **Cloud Architect Invocation**: Executing AI agent for change analysis
-3. **Notification Mapping**: Converting analysis results to notification format
-4. **Notification Sending**: Notifying stakeholders through SNS topic
+1. **イベント解析**: CloudFormationイベントの詳細を解析
+2. **クラウドアーキテクト呼び出し**: 変更分析のためのAIエージェント実行
+3. **通知マッピング**: 分析結果を通知形式に変換
+4. **通知送信**: SNSトピックを通じて関係者に通知
 
-## Installation
+## インストール方法
 
-### Prerequisites
+### 前提条件
 
-- AWS CLI version 2.0+
-- Node.js version 14.0+
-- npm version 6.0+
-- AWS CDK version 2.0+
-- AWS account with appropriate IAM user permissions
+- AWS CLI バージョン 2.0以上
+- Node.js バージョン 14.0以上
+- npm バージョン 6.0以上
+- AWS CDK バージョン 2.0以上
+- AWS アカウントと適切な権限を持つIAMユーザー
 
-### Detailed Setup Instructions
+### 詳細セットアップ手順
 
-1. Clone the repository
+1. リポジトリをクローン
+
 ```bash
 git clone https://gitlab.aws.dev/wmikuriy/multi-agent-samples-jp.git
 cd multi-agent-samples-jp
 ```
 
-2. Install dependencies
+2. 依存関係をインストール
+
 ```bash
 npm install
 ```
 
-3. Bootstrap CDK (first time only)
+3. CDKをブートストラップ（初回のみ）
+
 ```bash
 cdk bootstrap
 ```
 
-4. Set environment variables
-```bash
-# Required environment variables
-export AWS_REGION=us-west-2  # Deployment region
+4. 環境変数の設定
 
-# Optional environment variables
-export ENV_NAME=dev  # Environment name (default is 'dev')
-export NOTIFICATION_EMAIL=your-email@example.com  # Notification email
+```bash
+# 必須環境変数
+export AWS_REGION=us-west-2  # デプロイ先のリージョン
+
+# オプション環境変数
+export ENV_NAME=dev  # 環境名（デフォルトは 'dev'）
+export NOTIFICATION_EMAIL=your-email@example.com  # 通知用メールアドレス
 ```
 
-5. Deploy
+5. デプロイ
+
 ```bash
-# Deploy all stacks
+# すべてのスタックをデプロイ
 cdk deploy --all
 
-# Deploy specific stack
+# 特定のスタックのみデプロイ
 cdk deploy mas-jp-bizdev-ma-agent-dev
 ```
 
-6. Post-deployment verification
+6. デプロイ後の確認
+
 ```bash
-# List deployed stacks
+# デプロイされたスタックの一覧を表示
 cdk list
 
-# Display stack outputs
+# スタックの出力を表示
 aws cloudformation describe-stacks --stack-name mas-jp-bizdev-ma-agent-dev --query "Stacks[0].Outputs"
 ```
 
-## Usage
+## 使用方法
 
-### Running the Business Development Workflow
+### 事業開発ワークフローの実行
 
-1. Log in to AWS Management Console
-2. Navigate to Step Functions console
-3. Select `mas-jp-bizdev-wf-dev-main-workflow` state machine
-4. Click "Start execution"
-5. Provide input like:
+1. AWS Management Consoleにログイン
+2. Step Functions コンソールに移動
+3. `mas-jp-bizdev-wf-dev-main-workflow` ステートマシンを選択
+4. 「実行を開始」ボタンをクリック
+5. 以下のような入力を提供:
+
 ```json
 {
-  "requirement": "I want to manage household finances with a mobile app. I want to record income and expenses, view aggregations by category, and check monthly reports. I also want budget setting and notification features.",
+  "requirement": "モバイルアプリで家計簿を管理したい。収入と支出を記録し、カテゴリ別の集計や月次レポートを確認できるようにしたい。また、予算設定と通知機能も欲しい。",
   "user_id": "user123"
 }
 ```
-6. Monitor execution progress in the Step Functions visualization tool
-7. Check the output of each step in the S3 bucket
 
-### Testing CloudFormation Analysis
+6. 実行の進捗をStep Functions可視化ツールで確認
+7. 各ステップの出力をS3バケットで確認
 
-1. Create a test CloudFormation stack and intentionally make it fail:
+### CloudFormation分析の確認
+
+1. テスト用のCloudFormationスタックを作成し、意図的に失敗させる:
 
 ```bash
-# Example of a failing CloudFormation template
+# 失敗するCloudFormationテンプレートの例
 cat > failed-template.yaml << EOF
 Resources:
   MyBucket:
@@ -458,111 +464,115 @@ Resources:
       BucketName: this-bucket-name-probably-exists-already
 EOF
 
-# Deploy the stack
+# スタックをデプロイ
 aws cloudformation create-stack --stack-name test-failure --template-body file://failed-template.yaml
 ```
 
-2. When the CloudFormation stack fails, analysis will automatically begin
-3. Analysis results will be notified via email through the configured SNS topic
-4. Check the execution of the `mas-jp-cfnfa-ed-dev-cfn-analysis` state machine in the Step Functions console
-5. View detailed analysis reports in the S3 bucket
+2. CloudFormationスタックが失敗すると、自動的に分析が開始される
+3. 分析結果は設定されたSNSトピックを通じてメールで通知される
+4. Step Functions コンソールで `mas-jp-cfnfa-ed-dev-cfn-analysis` ステートマシンの実行を確認
+5. S3バケットで詳細な分析レポートを確認
 
-## Advanced Usage
+## 高度な使用例
 
-### Adding Custom Agents
+### カスタムエージェントの追加
 
-This framework is extensible, allowing you to add new agent types:
+このフレームワークは拡張可能で、新しいエージェントタイプを追加できます:
 
-1. Create a Lambda function for the new agent:
-   - Create a new folder in the `lambda/action_group/custom/` directory
-   - Implement necessary handlers and helper functions
+1. 新しいエージェント用のLambda関数を作成:
+   - `lambda/action_group/custom/` ディレクトリに新しいフォルダを作成
+   - 必要なハンドラーとヘルパー関数を実装
 
-2. Create an agent construct:
-   - Create a new file in the `lib/constructs/agent/custom/` directory
-   - Implement based on existing agent constructs
+2. エージェントコンストラクトを作成:
+   - `lib/constructs/agent/custom/` ディレクトリに新しいファイルを作成
+   - 既存のエージェントコンストラクトを参考に実装
 
-3. Add the new agent to the stack:
-   - Edit the appropriate stack file to integrate the new agent
+3. スタックに新しいエージェントを追加:
+   - 適切なスタックファイルを編集し、新しいエージェントを統合
 
-### Customizing Workflows
+### ワークフローのカスタマイズ
 
-Step Functions workflows can be flexibly customized:
+Step Functionsワークフローは柔軟にカスタマイズ可能です:
 
-1. Edit files in the `lib/constructs/workflow/` directory
-2. Add new steps, modify existing steps, or add conditional branches
-3. Deploy changes to apply the new workflow
+1. `lib/constructs/workflow/` ディレクトリのファイルを編集
+2. 新しいステップの追加、既存ステップの変更、または条件分岐の追加
+3. 変更をデプロイして新しいワークフローを適用
+
+### 本番環境で利用する際のセキュリティ上の注意事項
+
+本コードはサンプルコードです。本番環境で利用する際は、以下の点に注意してください：
+
+1. **認証・認可**
+   - 適切なIAMロールとポリシーを設定し、最小権限の原則に従う
+   - APIエンドポイントにはCognitoやAPI Gatewayの認証を実装する
+
+2. **データ保護**
+   - S3バケットの暗号化（SSE-S3、SSE-KMS）を有効化
+   - DynamoDBテーブルの暗号化を有効化
+   - 転送中のデータにはTLS/SSLを使用
+   - 機密情報はAWS Secrets Managerで管理
+
+3. **ガードレール**
+   - Bedrockモデルに適切なガードレールを設定し、有害な出力を防止
+   - 入力検証と出力フィルタリングを実装
+   - エージェントの行動範囲と権限を明確に制限
+   
+その他、LLMを利用したアプリケーションにおけるセキュリティ対策として [OWASP Top 10 for Large Language Model Applications](https://owasp.org/www-project-top-10-for-large-language-model-applications/) などを参照してください。
 
 
-### Security Considerations　in Production
 
-When using this sample code in a production environment, please consider the following:
 
-1. **Authentication & Authorization**
-   - Configure appropriate IAM roles and policies following the principle of least privilege
-   - Implement authentication for API endpoints using Cognito or API Gateway
-   - Introduce proper authentication mechanisms for inter-agent communications
 
-2. **Data Protection**
-   - Enable encryption for S3 buckets (SSE-S3, SSE-KMS)
-   - Enable encryption for DynamoDB tables
-   - Use TLS/SSL for data in transit
-   - Manage sensitive information with AWS Secrets Manager
-
-3. **Guardrails**
-   - Configure appropriate guardrails for Bedrock models to prevent harmful outputs
-   - Implement input validation and output filtering
-   - Clearly limit the scope and permissions of agent actions
-
-For additional security measures in LLM applications, refer to resources such as [OWASP Top 10 for Large Language Model Applications](https://owasp.org/www-project-top-10-for-large-language-model-applications/).
-
-## Project Structure Details
+## プロジェクト構成詳細
 
 ```
 .
-├── bin/                      # CDK application entry point
-│   └── multiagent-framework.ts  # Main CDK app definition
-├── lib/                      # CDK stacks and constructs
-│   ├── constructs/           # Reusable constructs
-│   │   ├── agent/            # Agent definitions
-│   │   │   ├── aws/          # AWS-specific agents
-│   │   │   │   ├── cloud-architect.ts    # Cloud Architect agent
-│   │   │   │   ├── index.ts              # AWS agent exports
-│   │   │   │   └── serverless-architect.ts # Serverless Architect agent
-│   │   │   └── bizdev/       # Business development agents
-│   │   │       ├── architect.ts          # Architect agent
-│   │   │       ├── data-interpreter.ts   # Data Interpreter agent
-│   │   │       ├── engineer.ts           # Engineer agent
-│   │   │       ├── index.ts              # Business development agent exports
-│   │   │       └── product-manager.ts    # Product Manager agent
-│   │   ├── event-driven/     # Event-driven constructs
-│   │   │   └── cloudformation-analysis.ts # CloudFormation analysis construct
-│   │   ├── infrastructure/   # Infrastructure resources
-│   │   │   ├── api-lambda.ts            # API Lambda function
-│   │   │   ├── lambda-resources.ts      # Common Lambda resources
-│   │   │   ├── messaging-resources.ts   # Messaging resources
-│   │   │   └── storage-resources.ts     # Storage resources
-│   │   ├── multi-agents/     # Multi-agent collaboration
-│   │   │   └── bizdev/       # Business development multi-agents
-│   │   │       └── bizdev-supervisor.ts  # Business development supervisor
-│   │   └── workflow/         # Workflow definitions
-│   │       └── bizdev-workflow.ts       # Business development workflow
-│   ├── bizdev-ma-agent-stack.ts    # Business development multi-agent stack
-│   ├── bizdev-ma-supervisor-stack.ts # Supervisor stack
-│   ├── bizdev-wf-stack.ts    # Business development workflow stack
-│   └── cfnfa-ed-stack.ts     # CloudFormation analysis stack
-├── lambda/                   # Lambda function source code
-│   └── action_group/         # Agent action groups
-│       ├── aws/              # AWS-related Lambdas
-│       │   ├── cfn-event-parser/       # CloudFormation event parsing
-│       │   ├── cloud-architect/        # Cloud Architect
-│       │   └── serverless-architect/   # Serverless Architect
-│       └── bizdev/           # Business development-related Lambdas
-│           ├── architect/              # Architect
-│           ├── engineer/               # Engineer
-│           └── product-manager/        # Product Manager
-├── package.json              # Project dependencies
-└── tsconfig.json             # TypeScript configuration
+├── bin/                      # CDKアプリケーションのエントリーポイント
+│   └── multiagent-framework.ts  # メインCDKアプリ定義
+├── lib/                      # CDKスタックとコンストラクト
+│   ├── constructs/           # 再利用可能なコンストラクト
+│   │   ├── agent/            # エージェント定義
+│   │   │   ├── aws/          # AWSに特化したエージェント
+│   │   │   │   ├── cloud-architect.ts    # クラウドアーキテクトエージェント
+│   │   │   │   ├── index.ts              # AWSエージェントのエクスポート
+│   │   │   │   └── serverless-architect.ts # サーバーレスアーキテクトエージェント
+│   │   │   └── bizdev/       # 事業開発エージェント
+│   │   │       ├── architect.ts          # アーキテクトエージェント
+│   │   │       ├── data-interpreter.ts   # データインタープリターエージェント
+│   │   │       ├── engineer.ts           # エンジニアエージェント
+│   │   │       ├── index.ts              # 事業開発エージェントのエクスポート
+│   │   │       └── product-manager.ts    # プロダクトマネージャーエージェント
+│   │   ├── event-driven/     # イベント駆動型コンストラクト
+│   │   │   └── cloudformation-analysis.ts # CloudFormation分析コンストラクト
+│   │   ├── infrastructure/   # インフラストラクチャリソース
+│   │   │   ├── api-lambda.ts            # API Lambda関数
+│   │   │   ├── lambda-resources.ts      # Lambda共通リソース
+│   │   │   ├── messaging-resources.ts   # メッセージングリソース
+│   │   │   └── storage-resources.ts     # ストレージリソース
+│   │   ├── multi-agents/     # マルチエージェント連携
+│   │   │   └── bizdev/       # 事業開発マルチエージェント
+│   │   │       └── bizdev-supervisor.ts  # 事業開発スーパーバイザー
+│   │   └── workflow/         # ワークフロー定義
+│   │       └── bizdev-workflow.ts       # 事業開発ワークフロー
+│   ├── bizdev-ma-agent-stack.ts    # 事業開発マルチエージェントスタック
+│   ├── bizdev-ma-supervisor-stack.ts # スーパーバイザースタック
+│   ├── bizdev-wf-stack.ts    # 事業開発ワークフロースタック
+│   └── cfnfa-ed-stack.ts     # CloudFormation分析スタック
+├── lambda/                   # Lambda関数のソースコード
+│   └── action_group/         # エージェントアクショングループ
+│       ├── aws/              # AWS関連Lambda
+│       │   ├── cfn-event-parser/       # CloudFormationイベント解析
+│       │   ├── cloud-architect/        # クラウドアーキテクト
+│       │   └── serverless-architect/   # サーバーレスアーキテクト
+│       └── bizdev/           # 事業開発関連Lambda
+│           ├── architect/              # アーキテクト
+│           ├── engineer/               # エンジニア
+│           └── product-manager/        # プロダクトマネージャー
+├── package.json              # プロジェクト依存関係
+└── tsconfig.json             # TypeScript設定
 ```
+
+
 
 ## Security
 
