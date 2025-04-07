@@ -26,9 +26,6 @@ COMMUNICATION_QUEUE_URL = os.environ.get('COMMUNICATION_QUEUE_URL')
 EVENT_BUS_NAME = os.environ.get('EVENT_BUS_NAME')
 CODE_EXECUTION_PROJECT = os.environ.get('CODE_EXECUTION_PROJECT')
 
-# AWS クライアント
-codebuild = boto3.client('codebuild')
-
 class Engineer(Agent):
     """エンジニアエージェント"""
     
