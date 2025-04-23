@@ -32,7 +32,7 @@ class LLMClient:
                 }
             )
         )
-        self.model_id = model_id or os.environ.get('DEFAULT_MODEL_ID', 'anthropic.claude-3-sonnet-20240229-v1:0')
+        self.model_id = model_id or os.environ.get('DEFAULT_MODEL_ID', 'anthropic.claude-3-5-sonnet-20241022-v2:0')
     
     def invoke_llm(self, 
                   messages: List[Dict[str, str]], 

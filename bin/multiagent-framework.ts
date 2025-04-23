@@ -3,6 +3,8 @@ import * as cdk from 'aws-cdk-lib';
 import { BizDevMaStack } from '../lib/bizdev-ma-agent-stack';
 import { BizDevWorkflowStack } from '../lib/bizdev-wf-stack';
 import { CFnAnalysisEventDrivenStack } from '../lib/cfnfa-ed-stack';
+import { MaterialsWorkflowStack } from '../lib/materials-workflow-stack';
+import { MaterialsMaSvStack } from '../lib/materials-ma-supervisor-stack';
 import { Aspects, IAspect } from 'aws-cdk-lib';
 import { AwsSolutionsChecks, NagSuppressions } from 'cdk-nag';
 import { IConstruct } from 'constructs';
@@ -62,8 +64,26 @@ const cfnFailureAnalysis = new CFnAnalysisEventDrivenStack(app, `${projectName}-
   notificationEmail,
 });
 
+// マテリアルインフォマティクスワークフロー
+const materialsWorkflow = new MaterialsWorkflowStack(app, `${projectName}-materials-wf-${envName}`, {
+  env,
+  envName,
+  projectName,
+});
+
+// マテリアルインフォマティクスマルチエージェント（スーパーバイザー）
+const materialsSupervisor = new MaterialsMaSvStack(app, `${projectName}-materials-ma-sv-${envName}`, {
+  env,
+  envName,
+  projectName,
+  propertyTarget_alias: materialsWorkflow.propertyTargetAlias,
+  inverseDesign_alias: materialsWorkflow.inverseDesignAlias,
+  experimentPlanning_alias: materialsWorkflow.experimentPlanningAlias,
+});
+
 // マルチエージェントのスーパーバイザー、コラボレーターの明示的な依存関係の定義
 bizDevSupervisorStack.addDependency(bizDevMultiagentStack)
+materialsSupervisor.addDependency(materialsWorkflow)
 
 // CDK Nagの警告を抑制（一箇所に集約）
 const commonSuppressions = [
@@ -76,3 +96,5 @@ NagSuppressions.addStackSuppressions(bizDevMultiagentStack, commonSuppressions);
 NagSuppressions.addStackSuppressions(bizDevSupervisorStack, commonSuppressions);
 NagSuppressions.addStackSuppressions(bizDevWorkflow, commonSuppressions);
 NagSuppressions.addStackSuppressions(cfnFailureAnalysis, commonSuppressions);
+NagSuppressions.addStackSuppressions(materialsWorkflow, commonSuppressions);
+NagSuppressions.addStackSuppressions(materialsSupervisor, commonSuppressions);
